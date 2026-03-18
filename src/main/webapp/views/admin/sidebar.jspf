@@ -1,0 +1,506 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<style>
+/* ═══════════════════════════════════════════
+   SIDEBAR + MOBILE — MUIANGA'S ADMIN
+   ═══════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;900&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+    display: flex;
+    min-height: 100vh;
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    background: #0E0C0A;
+}
+
+/* ── OVERLAY MOBILE ─────────────────────── */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 49;
+    backdrop-filter: blur(3px);
+}
+.sidebar-overlay.active { display: block; }
+
+/* ── TOPBAR MOBILE ──────────────────────── */
+.mobile-topbar {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 60px;
+    background: rgba(10,8,6,0.97);
+    border-bottom: 1px solid #1E1814;
+    backdrop-filter: blur(12px);
+    z-index: 48;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.2rem;
+}
+
+.mobile-brand {
+    font-size: 1rem;
+    font-weight: 900;
+    letter-spacing: 3px;
+    color: #C8A951;
+}
+
+.hamburger-btn {
+    background: transparent;
+    border: 1px solid #2A2218;
+    border-radius: 6px;
+    padding: 0.5rem 0.7rem;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    transition: border-color 0.2s;
+}
+.hamburger-btn:hover { border-color: #C8A951; }
+.hamburger-btn span {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: #C8A951;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+/* Animação X ao abrir */
+.hamburger-btn.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+.hamburger-btn.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.hamburger-btn.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+/* ── SIDEBAR ────────────────────────────── */
+.sidebar {
+    width: 260px;
+    min-height: 100vh;
+    background: #100D0A;
+    border-right: 1px solid #1E1814;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    z-index: 50;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.sidebar::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #6B4C2A, #C8A951, #6B4C2A);
+}
+
+/* ── LOGO ───────────────────────────────── */
+.sidebar-logo {
+    padding: 1.8rem 1.5rem 1.5rem;
+    border-bottom: 1px solid #1A1510;
+}
+.sidebar-logo-main {
+    font-size: 1.2rem;
+    font-weight: 900;
+    letter-spacing: 4px;
+    color: #C8A951;
+    text-transform: uppercase;
+    animation: fadeSlideDown 0.5s ease;
+}
+.sidebar-logo-sub {
+    font-size: 0.6rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #3A3028;
+    margin-top: 0.3rem;
+    font-weight: 400;
+    animation: fadeSlideDown 0.6s ease;
+}
+.sidebar-admin-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 1rem;
+    background: rgba(200,169,81,0.08);
+    border: 1px solid rgba(200,169,81,0.2);
+    border-radius: 20px;
+    padding: 0.3rem 0.8rem;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #C8A951;
+    animation: fadeSlideDown 0.7s ease;
+}
+.sidebar-admin-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: #C8A951;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+}
+
+/* ── USER INFO ──────────────────────────── */
+.sidebar-user {
+    padding: 1.2rem 1.5rem;
+    border-bottom: 1px solid #1A1510;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    animation: fadeSlideDown 0.8s ease;
+}
+.user-avatar {
+    width: 38px; height: 38px;
+    background: linear-gradient(135deg, #6B4C2A, #C8A951);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem;
+    font-weight: 900;
+    color: #0E0C0A;
+    flex-shrink: 0;
+}
+.user-nome {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #C0B4A8;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.user-cargo {
+    font-size: 0.62rem;
+    color: #3A3028;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 0.1rem;
+}
+
+/* ── NAVEGAÇÃO ──────────────────────────── */
+.sidebar-nav {
+    flex: 1;
+    padding: 1rem 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.sidebar-nav::-webkit-scrollbar { width: 3px; }
+.sidebar-nav::-webkit-scrollbar-thumb { background: #2A2218; border-radius: 2px; }
+
+.nav-group { margin-bottom: 0.5rem; }
+.nav-group-label {
+    font-size: 0.55rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #2A2218;
+    padding: 0.8rem 1.5rem 0.4rem;
+}
+
+.sidebar-nav a {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: #5A4E44;
+    transition: all 0.2s ease;
+    border-left: 3px solid transparent;
+    text-decoration: none;
+    animation: fadeSlideLeft 0.4s ease both;
+}
+.sidebar-nav a:hover {
+    color: #D4C8BC;
+    background: rgba(200,169,81,0.05);
+    border-left-color: #6B4C2A;
+    padding-left: 1.9rem;
+}
+.sidebar-nav a.active {
+    color: #C8A951;
+    background: rgba(200,169,81,0.08);
+    border-left-color: #C8A951;
+}
+.sidebar-nav a.active .nav-icon-wrap {
+    background: rgba(200,169,81,0.15);
+    color: #C8A951;
+}
+
+.nav-icon-wrap {
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    background: #161210;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    flex-shrink: 0;
+    transition: all 0.2s;
+}
+.sidebar-nav a:hover .nav-icon-wrap { background: rgba(107,76,42,0.2); }
+
+.nav-sep { height: 1px; background: #1A1510; margin: 0.5rem 1.5rem; }
+
+@keyframes fadeSlideLeft {
+    from { opacity: 0; transform: translateX(-12px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes fadeSlideDown {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── FOOTER SIDEBAR ─────────────────────── */
+.sidebar-footer {
+    padding: 1.2rem 1.5rem;
+    border-top: 1px solid #1A1510;
+}
+.sidebar-footer a {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #3A3028;
+    letter-spacing: 0.5px;
+    text-decoration: none;
+    transition: color 0.2s;
+    padding: 0.4rem 0;
+}
+.sidebar-footer a:hover { color: #E07060; }
+
+/* ── CONTEÚDO PRINCIPAL ─────────────────── */
+.main-content {
+    margin-left: 260px;
+    flex: 1;
+    padding: 2.5rem 3rem;
+    min-height: 100vh;
+    animation: fadeIn 0.4s ease;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── PAGE HEADER ────────────────────────── */
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #1E1814;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+.page-title { font-size: 1.5rem; font-weight: 900; color: #F0EAE0; letter-spacing: 1px; }
+.page-subtitle { font-size: 0.72rem; color: #4A4038; margin-top: 0.3rem; }
+
+/* ══════════════════════════════════════════
+   MOBILE — max 768px
+   ══════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+    /* Mostrar topbar mobile */
+    .mobile-topbar { display: flex; }
+
+    /* Sidebar escondida por defeito */
+    .sidebar {
+        transform: translateX(-100%);
+        top: 0;
+    }
+    .sidebar.mobile-open { transform: translateX(0); }
+
+    /* Conteúdo ocupa tudo */
+    .main-content {
+        margin-left: 0;
+        padding: 1.2rem;
+        padding-top: 72px; /* espaço para topbar */
+    }
+
+    /* Tabelas com scroll horizontal */
+    .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    table { min-width: 500px; font-size: 0.75rem; }
+    th, td { padding: 0.6rem 0.5rem; }
+
+    /* Grids */
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr !important; }
+    .grid-4 { grid-template-columns: repeat(2, 1fr) !important; }
+
+    /* Cards */
+    .card { padding: 1.2rem; }
+
+    /* Stat cards — 2 por linha */
+    .stat-card { padding: 1rem; }
+    .stat-value { font-size: 1.5rem; }
+
+    /* Page header */
+    .page-header { flex-direction: column; align-items: flex-start; }
+
+    /* Formulários */
+    .form-control { font-size: 16px; } /* evita zoom no iOS */
+
+    /* Mesas — 2 por linha */
+    .mesa-grid { grid-template-columns: repeat(2, 1fr) !important; }
+}
+
+@media (max-width: 400px) {
+    .grid-4 { grid-template-columns: 1fr !important; }
+    .main-content { padding: 1rem; padding-top: 68px; }
+}
+</style>
+
+<%
+    String uri = request.getRequestURI();
+    String activePage = "";
+    if (uri.contains("/dashboard"))      activePage = "dashboard";
+    else if (uri.contains("/mesas"))     activePage = "mesas";
+    else if (uri.contains("/reservas"))  activePage = "reservas";
+    else if (uri.contains("/produtos"))  activePage = "produtos";
+    else if (uri.contains("/categorias"))activePage = "categorias";
+    else if (uri.contains("/pedidos"))   activePage = "pedidos";
+    else if (uri.contains("/funcionarios")) activePage = "funcionarios";
+    else if (uri.contains("/relatorios"))activePage = "relatorios";
+%>
+
+<c:set var="func" value="${sessionScope.funcionario}"/>
+
+<!-- OVERLAY MOBILE -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<!-- TOPBAR MOBILE -->
+<div class="mobile-topbar">
+    <div class="mobile-brand">MUIANGA'S</div>
+    <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleSidebar()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+</div>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+
+    <div class="sidebar-logo">
+        <div class="sidebar-logo-main">Muianga's</div>
+        <div class="sidebar-logo-sub">Painel de Administração</div>
+        <div class="sidebar-admin-badge">Admin Online</div>
+    </div>
+
+    <div class="sidebar-user">
+        <div class="user-avatar">A</div>
+        <div>
+            <div class="user-nome">
+                <c:choose>
+                    <c:when test="${not empty func.nome}"><c:out value="${func.nome}"/></c:when>
+                    <c:otherwise>Administrador</c:otherwise>
+                </c:choose>
+            </div>
+            <div class="user-cargo">
+                <c:choose>
+                    <c:when test="${not empty func.cargo}"><c:out value="${func.cargo}"/></c:when>
+                    <c:otherwise>Gestão</c:otherwise>
+                </c:choose>
+            </div>
+        </div>
+    </div>
+
+    <nav class="sidebar-nav">
+
+        <div class="nav-group">
+            <div class="nav-group-label">Geral</div>
+            <a href="${pageContext.request.contextPath}/admin/dashboard"
+               class="<%= "dashboard".equals(activePage) ? "active" : "" %>" onclick="closeSidebarMobile()">
+                 Dashboard
+            </a>
+            <a href="${pageContext.request.contextPath}/admin/mesas"
+               class="<%= "mesas".equals(activePage) ? "active" : "" %>" onclick="closeSidebarMobile()">
+                 Mesas
+            </a>
+            <a href="${pageContext.request.contextPath}/admin/reservas"
+               class="<%= "reservas".equals(activePage) ? "active" : "" %>" onclick="closeSidebarMobile()">
+                 Reservas
+            </a>
+            <a href="${pageContext.request.contextPath}/admin/pedidos"
+               class="<%= "pedidos".equals(activePage) ? "active" : "" %>" onclick="closeSidebarMobile()">
+                 Pedidos
+            </a>
+            
+            <a href="${pageContext.request.contextPath}/admin/delivery"
+   				class="<%= "delivery".equals(activePage) ? "active" : "" %>" onclick="closeSidebarMobile()">
+    		 Delivery
+</a>
+        </div>
+
+        <div class="nav-sep"></div>
+
+        <div class="nav-group">
+            <div class="nav-group-label">Catálogo</div>
+            <a href="${pageContext.request.contextPath}/admin/produtos"
+               class="<%= "produtos".equals(activePage) ? "active" : "" %>" onclick="closeSidebarMobile()">
+                 Produtos
+            </a>
+            <a href="${pageContext.request.contextPath}/admin/categorias"
+               class="<%= "categorias".equals(activePage) ? "active" : "" %>" onclick="closeSidebarMobile()">
+                 Categorias
+            </a>
+        </div>
+
+        <div class="nav-sep"></div>
+
+        <div class="nav-group">
+            <div class="nav-group-label">Administração</div>
+            <c:if test="${sessionScope.funcionario.cargo == 'admin' || sessionScope.funcionario.cargo == 'gerente'}">
+                <a href="${pageContext.request.contextPath}/admin/funcionarios"
+                   class="<%= "funcionarios".equals(activePage) ? "active" : "" %>" onclick="closeSidebarMobile()">
+                    Funcionários
+                </a>
+            </c:if>
+            <a href="${pageContext.request.contextPath}/admin/relatorios"
+               class="<%= "relatorios".equals(activePage) ? "active" : "" %>" onclick="closeSidebarMobile()">
+                 Relatórios
+            </a>
+        </div>
+
+    </nav>
+
+    <div class="sidebar-footer">
+        <a href="${pageContext.request.contextPath}/views/public/index.jsp" onclick="closeSidebarMobile()">
+           Ver Site Público
+        </a>
+        <a href="${pageContext.request.contextPath}/logout">
+           Terminar Sessão
+        </a>
+    </div>
+
+</div>
+
+<!-- CONTEÚDO PRINCIPAL -->
+<div class="main-content">
+
+<script>
+function toggleSidebar() {
+    const sidebar  = document.getElementById('sidebar');
+    const overlay  = document.getElementById('sidebarOverlay');
+    const btn      = document.getElementById('hamburgerBtn');
+    sidebar.classList.toggle('mobile-open');
+    overlay.classList.toggle('active');
+    btn.classList.toggle('open');
+}
+
+function closeSidebarMobile() {
+    if (window.innerWidth <= 768) {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        const btn     = document.getElementById('hamburgerBtn');
+        sidebar.classList.remove('mobile-open');
+        overlay.classList.remove('active');
+        btn.classList.remove('open');
+    }
+}
+</script>
