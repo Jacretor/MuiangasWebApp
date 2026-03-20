@@ -1,7 +1,0 @@
-bin/
-build/
-target/
-.settings/
-.metadata/
-Servers/
-*.class

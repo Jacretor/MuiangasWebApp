@@ -646,7 +646,7 @@
 <script>
     // ── ACESSO ADMIN SECRETO: Ctrl+Shift+A ────────────
     document.addEventListener('keydown', function(e) {
-        if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+        if (e.ctrlKey && e.altKey && e.key === 'm') {
             window.location.href = '${pageContext.request.contextPath}/login';
         }
     });
