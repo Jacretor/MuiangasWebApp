@@ -8,9 +8,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
 
-/**
- * Servlet CRUD de categorias.
- */
 @WebServlet(name = "CategoriaServlet", urlPatterns = "/admin/categorias")
 public class CategoriaServlet extends HttpServlet {
 
@@ -33,8 +30,10 @@ public class CategoriaServlet extends HttpServlet {
                 req.getRequestDispatcher("/views/admin/categoria-form.jsp").forward(req, resp);
 
             } else if ("eliminar".equals(acao)) {
-                dao.eliminar(Integer.parseInt(req.getParameter("id")));
-                resp.sendRedirect(req.getContextPath() + "/admin/categorias");
+                int id = Integer.parseInt(req.getParameter("id"));
+                // Elimina com segurança — move produtos para "Outros" se necessário
+                dao.eliminarComSeguranca(id);
+                resp.sendRedirect(req.getContextPath() + "/admin/categorias?msg=eliminado");
 
             } else {
                 req.setAttribute("categorias", dao.listarTodas());
@@ -42,6 +41,7 @@ public class CategoriaServlet extends HttpServlet {
             }
         } catch (Exception e) {
             req.setAttribute("erro", "Erro: " + e.getMessage());
+            try { req.setAttribute("categorias", dao.listarTodas()); } catch (Exception ignored) {}
             req.getRequestDispatcher("/views/admin/categorias.jsp").forward(req, resp);
         }
     }

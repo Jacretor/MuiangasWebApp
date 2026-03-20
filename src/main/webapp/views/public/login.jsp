@@ -1,15 +1,10 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login — Muianga's</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
-    <style>
-        /* Sem indicação visual de que é área admin */
-        .login-hint { display:none; }
-    </style>
+    <link rel="stylesheet" href="/MuiangasWeb/css/style.css">
 </head>
 <body>
 <div class="login-page">
@@ -19,11 +14,9 @@
             <p>Área Interna · Autenticação</p>
         </div>
 
-        <c:if test="${not empty erro}">
-            <div class="alert alert-danger"><c:out value="${erro}"/></div>
-        </c:if>
+        <div id="msg-erro" class="alert alert-danger" style="display:none;"></div>
 
-        <form method="post" action="${pageContext.request.contextPath}/login">
+        <form method="post" action="/MuiangasWeb/login">
             <div class="form-group">
                 <label class="form-label">E-mail</label>
                 <input type="email" name="email" class="form-control"
@@ -38,9 +31,25 @@
         </form>
 
         <p class="text-center text-muted mt-3" style="font-size:0.8rem;">
-            <a href="${pageContext.request.contextPath}/views/public/index.jsp">← Voltar ao site</a>
+            <a href="/MuiangasWeb/">← Voltar ao site</a>
         </p>
     </div>
 </div>
+
+<script>
+    // Mostrar erro se vier via parâmetro URL (?erro=...)
+    var params = new URLSearchParams(window.location.search);
+    var erro   = params.get('erro');
+    if (erro) {
+        var el = document.getElementById('msg-erro');
+        var msgs = {
+            'credenciais': 'E-mail ou senha inválidos.',
+            'campos':      'Preencha o e-mail e a senha.',
+            'interno':     'Erro interno. Tente novamente.'
+        };
+        el.textContent = msgs[erro] || 'Erro ao autenticar.';
+        el.style.display = 'block';
+    }
+</script>
 </body>
 </html>

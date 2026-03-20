@@ -83,10 +83,7 @@
             Criar conta gratuita
         </a>
 
-        <div class="auth-footer">
-            És funcionário?
-            <a href="${pageContext.request.contextPath}/login">Área interna →</a>
-        </div>
+
     </div>
 </div>
 

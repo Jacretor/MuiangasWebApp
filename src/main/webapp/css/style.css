@@ -579,3 +579,12 @@ footer {
     .btn { padding: 0.55rem 1.2rem; font-size: 0.7rem; }
     .form-control { font-size: 0.85rem; }
 }
+
+/* ── BADGES PAGAMENTO ───────────────────────────────── */
+.bm-mpesa    { background:rgba(180,40,40,0.15);  color:#DC5050; border:1px solid rgba(180,40,40,0.25); }
+.bm-emola    { background:rgba(220,120,30,0.15); color:#E08030; border:1px solid rgba(220,120,30,0.25); }
+.bm-dinheiro { background:rgba(90,138,90,0.15);  color:#70A870; border:1px solid rgba(90,138,90,0.25); }
+.bm-pago     { background:rgba(80,160,80,0.15);  color:#50A050; border:1px solid rgba(80,160,80,0.25); }
+.bm-cancelado{ background:rgba(138,58,42,0.15);  color:#C06050; border:1px solid rgba(138,58,42,0.25); }
+.bm-aberto   { background:rgba(200,169,81,0.15); color:#C8A951; border:1px solid rgba(200,169,81,0.25); }
+.badge-metodo { display:inline-block; padding:0.22rem 0.7rem; border-radius:20px; font-size:0.62rem; font-weight:700; letter-spacing:1px; text-transform:uppercase; }

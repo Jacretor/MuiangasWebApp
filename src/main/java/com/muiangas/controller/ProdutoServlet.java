@@ -12,21 +12,16 @@ import java.io.*;
 import java.math.BigDecimal;
 import java.nio.file.*;
 
-/**
- * Servlet CRUD completo para produtos com suporte a upload de imagens.
- */
 @WebServlet(name = "ProdutoServlet", urlPatterns = "/admin/produtos")
 @MultipartConfig(
-    fileSizeThreshold = 1024 * 1024,      // 1MB em memória
-    maxFileSize       = 5 * 1024 * 1024,  // 5MB por ficheiro
-    maxRequestSize    = 10 * 1024 * 1024  // 10MB por pedido
+    fileSizeThreshold = 1024 * 1024,
+    maxFileSize       = 5 * 1024 * 1024,
+    maxRequestSize    = 10 * 1024 * 1024
 )
 public class ProdutoServlet extends HttpServlet {
 
-    private final ProdutoDAO    produtoDAO   = new ProdutoDAO();
-    private final CategoriaDAO  categoriaDAO = new CategoriaDAO();
-
-    // Pasta onde as imagens são guardadas (dentro do webapp)
+    private final ProdutoDAO   produtoDAO   = new ProdutoDAO();
+    private final CategoriaDAO categoriaDAO = new CategoriaDAO();
     private static final String PASTA_IMAGENS = "imagens_produtos";
 
     @Override
@@ -49,13 +44,19 @@ public class ProdutoServlet extends HttpServlet {
                 req.getRequestDispatcher("/views/admin/produto-form.jsp").forward(req, resp);
 
             } else if ("eliminar".equals(acao)) {
-                // Apagar imagem associada se existir
-                Produto p = produtoDAO.buscarPorId(Integer.parseInt(req.getParameter("id")));
-                if (p != null && p.getImagem() != null) {
-                    apagarImagem(req, p.getImagem());
+                int id = Integer.parseInt(req.getParameter("id"));
+                Produto p = produtoDAO.buscarPorId(id);
+
+                // Verificar se tem pedidos associados
+                if (produtoDAO.temPedidosAssociados(id)) {
+                    // Apenas desactivar em vez de eliminar
+                    produtoDAO.desactivar(id);
+                    resp.sendRedirect(req.getContextPath() + "/admin/produtos?msg=desactivado");
+                } else {
+                    if (p != null && p.getImagem() != null) apagarImagem(req, p.getImagem());
+                    produtoDAO.eliminar(id);
+                    resp.sendRedirect(req.getContextPath() + "/admin/produtos?msg=eliminado");
                 }
-                produtoDAO.eliminar(Integer.parseInt(req.getParameter("id")));
-                resp.sendRedirect(req.getContextPath() + "/admin/produtos?msg=eliminado");
 
             } else {
                 req.setAttribute("produtos", produtoDAO.listarTodos());
@@ -63,6 +64,7 @@ public class ProdutoServlet extends HttpServlet {
             }
         } catch (Exception e) {
             req.setAttribute("erro", "Erro: " + e.getMessage());
+            try { req.setAttribute("produtos", produtoDAO.listarTodos()); } catch (Exception ignored) {}
             req.getRequestDispatcher("/views/admin/produtos.jsp").forward(req, resp);
         }
     }
@@ -84,16 +86,12 @@ public class ProdutoServlet extends HttpServlet {
             p.setCategoriaId(Integer.parseInt(req.getParameter("categoriaId")));
             p.setDisponivel("on".equals(req.getParameter("disponivel")));
 
-            // Processar upload de imagem
             Part filePart = req.getPart("imagem");
             if (filePart != null && filePart.getSize() > 0) {
                 String nomeImagem = guardarImagem(req, filePart);
-                // Se estava a editar, apagar imagem antiga
                 if (p.getId() > 0) {
                     Produto antigo = produtoDAO.buscarPorId(p.getId());
-                    if (antigo != null && antigo.getImagem() != null) {
-                        apagarImagem(req, antigo.getImagem());
-                    }
+                    if (antigo != null && antigo.getImagem() != null) apagarImagem(req, antigo.getImagem());
                 }
                 p.setImagem(nomeImagem);
             }
@@ -113,27 +111,16 @@ public class ProdutoServlet extends HttpServlet {
         }
     }
 
-    /**
-     * Guarda o ficheiro de imagem na pasta do servidor e devolve o nome do ficheiro.
-     */
     private String guardarImagem(HttpServletRequest req, Part filePart) throws IOException {
         String pastaReal = req.getServletContext().getRealPath("") + File.separator + PASTA_IMAGENS;
         Files.createDirectories(Paths.get(pastaReal));
-
-        // Gerar nome único para evitar colisões
         String nomeOriginal = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-        String extensao = nomeOriginal.contains(".")
-            ? nomeOriginal.substring(nomeOriginal.lastIndexOf("."))
-            : ".jpg";
+        String extensao = nomeOriginal.contains(".") ? nomeOriginal.substring(nomeOriginal.lastIndexOf(".")) : ".jpg";
         String nomeUnico = "prod_" + System.currentTimeMillis() + extensao;
-
         filePart.write(pastaReal + File.separator + nomeUnico);
         return nomeUnico;
     }
 
-    /**
-     * Apaga o ficheiro de imagem do servidor.
-     */
     private void apagarImagem(HttpServletRequest req, String nomeImagem) {
         try {
             String caminho = req.getServletContext().getRealPath("") + File.separator + PASTA_IMAGENS + File.separator + nomeImagem;
@@ -144,8 +131,7 @@ public class ProdutoServlet extends HttpServlet {
     private boolean autenticado(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         HttpSession s = req.getSession(false);
         if (s == null || s.getAttribute("funcionario") == null) {
-            resp.sendRedirect(req.getContextPath() + "/login");
-            return false;
+            resp.sendRedirect(req.getContextPath() + "/login"); return false;
         }
         return true;
     }

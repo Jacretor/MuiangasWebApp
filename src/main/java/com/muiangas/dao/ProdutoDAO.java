@@ -9,6 +9,30 @@ import java.util.List;
  * DAO para operações CRUD sobre a tabela produtos.
  */
 public class ProdutoDAO {
+	
+	 /** Verifica se o produto tem itens de pedido associados */
+    public boolean temPedidosAssociados(int produtoId) throws SQLException {
+        Connection conn = DBUtil.getConnection();
+        try (PreparedStatement ps = conn.prepareStatement(
+                "SELECT COUNT(*) FROM itens_pedido WHERE produto_id=?")) {
+            ps.setInt(1, produtoId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return rs.getInt(1) > 0;
+            }
+        } finally { DBUtil.close(conn); }
+        return false;
+    }
+
+    /** Desactiva o produto em vez de eliminar (quando tem pedidos associados) */
+    public void desactivar(int id) throws SQLException {
+        Connection conn = DBUtil.getConnection();
+        try (PreparedStatement ps = conn.prepareStatement(
+                "UPDATE produtos SET disponivel=0 WHERE id=?")) {
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        } finally { DBUtil.close(conn); }
+    }
+
 
     public List<Produto> listarTodos() throws SQLException {
         List<Produto> lista = new ArrayList<>();
