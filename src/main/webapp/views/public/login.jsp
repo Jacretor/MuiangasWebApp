@@ -11,7 +11,7 @@
     <div class="login-card">
         <div class="login-logo">
             <h1>MUIANGA'S</h1>
-            <p>Área Interna · Autenticação</p>
+            <p>Area Interna Autenticacao</p>
         </div>
 
         <div id="msg-erro" class="alert alert-danger" style="display:none;"></div>
