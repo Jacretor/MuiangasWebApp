@@ -14,6 +14,18 @@ public class ClienteDAO {
     // ════════════════════════════════════════════════
     // MÉTODOS ORIGINAIS (não alterados)
     // ════════════════════════════════════════════════
+	
+    /** Activa ou desactiva um cliente */
+    public void alterarAtivo(int id, boolean ativo) throws SQLException {
+        Connection conn = DBUtil.getConnection();
+        try (PreparedStatement ps = conn.prepareStatement(
+                "UPDATE clientes SET ativo=? WHERE id=?")) {
+            ps.setBoolean(1, ativo);
+            ps.setInt(2, id);
+            ps.executeUpdate();
+        } finally { DBUtil.close(conn); }
+    }
+
 
     public List<Cliente> listarTodos() throws SQLException {
         List<Cliente> lista = new ArrayList<>();

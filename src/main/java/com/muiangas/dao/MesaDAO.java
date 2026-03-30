@@ -5,12 +5,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * DAO para operações sobre a tabela mesas.
- */
 public class MesaDAO {
 
-    /** @return todas as mesas ordenadas por número */
     public List<Mesa> listarTodas() throws SQLException {
         List<Mesa> lista = new ArrayList<>();
         Connection conn = DBUtil.getConnection();
@@ -21,7 +17,6 @@ public class MesaDAO {
         return lista;
     }
 
-    /** @return apenas as mesas com status 'livre' */
     public List<Mesa> listarLivres() throws SQLException {
         List<Mesa> lista = new ArrayList<>();
         Connection conn = DBUtil.getConnection();
@@ -32,7 +27,6 @@ public class MesaDAO {
         return lista;
     }
 
-    /** @return mesa pelo ID ou null */
     public Mesa buscarPorId(int id) throws SQLException {
         Connection conn = DBUtil.getConnection();
         try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM mesas WHERE id=?")) {
@@ -44,10 +38,10 @@ public class MesaDAO {
         return null;
     }
 
-    /** Insere uma nova mesa. */
     public void inserir(Mesa m) throws SQLException {
         Connection conn = DBUtil.getConnection();
-        try (PreparedStatement ps = conn.prepareStatement("INSERT INTO mesas (numero, capacidade, status) VALUES (?,?,?)")) {
+        try (PreparedStatement ps = conn.prepareStatement(
+                "INSERT INTO mesas (numero, capacidade, status) VALUES (?,?,?)")) {
             ps.setInt(1, m.getNumero());
             ps.setInt(2, m.getCapacidade());
             ps.setString(3, m.getStatus() != null ? m.getStatus() : "livre");
@@ -55,10 +49,10 @@ public class MesaDAO {
         } finally { DBUtil.close(conn); }
     }
 
-    /** Actualiza os dados de uma mesa. */
     public void actualizar(Mesa m) throws SQLException {
         Connection conn = DBUtil.getConnection();
-        try (PreparedStatement ps = conn.prepareStatement("UPDATE mesas SET numero=?, capacidade=?, status=? WHERE id=?")) {
+        try (PreparedStatement ps = conn.prepareStatement(
+                "UPDATE mesas SET numero=?, capacidade=?, status=? WHERE id=?")) {
             ps.setInt(1, m.getNumero());
             ps.setInt(2, m.getCapacidade());
             ps.setString(3, m.getStatus());
@@ -66,23 +60,38 @@ public class MesaDAO {
             ps.executeUpdate();
         } finally { DBUtil.close(conn); }
     }
-    
-    /** Elimina uma mesa pelo ID. Lança excepção se tiver pedidos associados. */
-    public void eliminar(int id) throws SQLException {
+
+    /** Verifica se a mesa tem pedidos associados */
+    public boolean temPedidosAssociados(int id) throws SQLException {
         Connection conn = DBUtil.getConnection();
         try (PreparedStatement ps = conn.prepareStatement(
-                "DELETE FROM mesas WHERE id=?")) {
+                "SELECT COUNT(*) FROM pedidos WHERE mesa_id=?")) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return rs.getInt(1) > 0;
+            }
+        } finally { DBUtil.close(conn); }
+        return false;
+    }
+
+    /**
+     * Elimina a mesa de forma segura:
+     * - Se tiver pedidos associados: apenas muda status para 'inactiva'
+     * - Se não tiver: elimina definitivamente
+     */
+    public boolean eliminar(int id) throws SQLException {
+        if (temPedidosAssociados(id)) {
+            // Não pode eliminar — tem histórico de pedidos
+            return false;
+        }
+        Connection conn = DBUtil.getConnection();
+        try (PreparedStatement ps = conn.prepareStatement("DELETE FROM mesas WHERE id=?")) {
             ps.setInt(1, id);
             ps.executeUpdate();
         } finally { DBUtil.close(conn); }
+        return true;
     }
 
-
-    /**
-     * Altera apenas o status de uma mesa.
-     * @param id ID da mesa
-     * @param status novo status (livre | ocupada | reservada)
-     */
     public void alterarStatus(int id, String status) throws SQLException {
         Connection conn = DBUtil.getConnection();
         try (PreparedStatement ps = conn.prepareStatement("UPDATE mesas SET status=? WHERE id=?")) {
@@ -92,7 +101,6 @@ public class MesaDAO {
         } finally { DBUtil.close(conn); }
     }
 
-    /** Conta mesas por status. */
     public int contarPorStatus(String status) throws SQLException {
         Connection conn = DBUtil.getConnection();
         try (PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) FROM mesas WHERE status=?")) {

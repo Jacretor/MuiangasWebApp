@@ -43,13 +43,19 @@ public class ProdutoServlet extends HttpServlet {
                 req.setAttribute("categorias", categoriaDAO.listarTodas());
                 req.getRequestDispatcher("/views/admin/produto-form.jsp").forward(req, resp);
 
+            } else if ("desactivar".equals(acao)) {
+                produtoDAO.desactivar(Integer.parseInt(req.getParameter("id")));
+                resp.sendRedirect(req.getContextPath() + "/admin/produtos?msg=desactivado");
+
+            } else if ("activar".equals(acao)) {
+                produtoDAO.activar(Integer.parseInt(req.getParameter("id")));
+                resp.sendRedirect(req.getContextPath() + "/admin/produtos?msg=activado");
+
             } else if ("eliminar".equals(acao)) {
                 int id = Integer.parseInt(req.getParameter("id"));
                 Produto p = produtoDAO.buscarPorId(id);
-
-                // Verificar se tem pedidos associados
                 if (produtoDAO.temPedidosAssociados(id)) {
-                    // Apenas desactivar em vez de eliminar
+                    // Tem histórico — desactivar em vez de eliminar
                     produtoDAO.desactivar(id);
                     resp.sendRedirect(req.getContextPath() + "/admin/produtos?msg=desactivado");
                 } else {

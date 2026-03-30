@@ -589,7 +589,7 @@
                     
                     <div>
                         <div class="c-label">Telefone</div>
-                        <div class="c-val">+258 84 000 0000</div>
+                        <div class="c-val">+258 87 316 905</div>
                     </div>
                 </div>
                 <div class="contact-item">

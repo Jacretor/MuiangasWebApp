@@ -11,10 +11,11 @@
 <body>
 <%@ include file="sidebar.jspf" %>
 
+<div class="main-content">
 <div class="page-header">
     <div>
         <h1 class="page-title">Dashboard</h1>
-        <p class="page-subtitle">Resumo do dia — <fmt:formatDate value="<%=new java.util.Date()%>" pattern="dd/MM/yyyy"/></p>
+        <p class="page-subtitle">Resumo do dia — <fmt:formatDate value="<%=new java.util.Date()%>" pattern="dd 'de' MMMM 'de' yyyy"/></p>
     </div>
     <a href="${pageContext.request.contextPath}/admin/pedidos?acao=novo" class="btn btn-gold">+ Novo Pedido</a>
 </div>
@@ -24,49 +25,74 @@
 </c:if>
 
 <c:if test="${comComprovativo > 0}">
-    <div class="alert" style="background:rgba(100,160,220,0.1);border:1px solid rgba(100,160,220,0.3);color:#64A0DC;border-radius:8px;padding:0.8rem 1.2rem;margin-bottom:1.5rem;font-size:0.82rem;">
-        📎 <strong>${comComprovativo}</strong> comprovativo(s) de pagamento delivery por verificar —
-        <a href="${pageContext.request.contextPath}/admin/delivery?status=pendente" style="color:#64A0DC;font-weight:700;">Ver agora →</a>
+    <div class="alert" style="background:rgba(100,160,220,0.08);border:1px solid rgba(100,160,220,0.25);color:#6090C8;border-radius:8px;padding:0.8rem 1.2rem;margin-bottom:1.5rem;font-size:0.82rem;display:flex;align-items:center;gap:0.8rem;">
+        <svg viewBox="0 0 24 24" width="16" height="16" style="stroke:#6090C8;fill:none;stroke-width:2;stroke-linecap:round;flex-shrink:0;"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
+        <span><strong>${comComprovativo}</strong> comprovativo(s) por verificar —
+        <a href="${pageContext.request.contextPath}/admin/delivery?status=pendente" style="color:#6090C8;font-weight:700;">Ver agora →</a></span>
     </div>
 </c:if>
 
-<!-- STAT CARDS — VENDAS -->
-<p style="font-size:0.6rem;letter-spacing:3px;text-transform:uppercase;color:#3A3028;margin-bottom:0.8rem;">Vendas de Hoje</p>
+<!-- VENDAS HOJE -->
+<p style="font-size:0.58rem;letter-spacing:4px;text-transform:uppercase;color:#3A3028;margin-bottom:0.8rem;">Vendas de Hoje</p>
 <div class="grid-4 mb-4">
-    <div class="stat-card" style="border-left:3px solid #C8A951;">
-        <div class="stat-value"><fmt:formatNumber value="${totalGeral}" pattern="#,##0.00"/></div>
+    <div class="stat-card" style="border-top-color:#C8A951;">
+        <div class="stat-icon">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        </div>
+        <div class="stat-value"><fmt:formatNumber value="${totalGeral}" pattern="#,##0"/></div>
         <div class="stat-label">Total Geral (MZN)</div>
     </div>
     <div class="stat-card">
-        <div class="stat-value"><fmt:formatNumber value="${totalVendas}" pattern="#,##0.00"/></div>
+        <div class="stat-icon">
+            <svg viewBox="0 0 24 24"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
+        </div>
+        <div class="stat-value"><fmt:formatNumber value="${totalVendas}" pattern="#,##0"/></div>
         <div class="stat-label">Vendas Mesa (MZN)</div>
     </div>
     <div class="stat-card">
-        <div class="stat-value"><fmt:formatNumber value="${totalDelivery}" pattern="#,##0.00"/></div>
+        <div class="stat-icon">
+            <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        </div>
+        <div class="stat-value"><fmt:formatNumber value="${totalDelivery}" pattern="#,##0"/></div>
         <div class="stat-label">Vendas Delivery (MZN)</div>
     </div>
     <div class="stat-card">
+        <div class="stat-icon">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
         <div class="stat-value">${pedidosDelivery}</div>
         <div class="stat-label">Pedidos Delivery Hoje</div>
     </div>
 </div>
 
-<!-- STAT CARDS — ESTADO -->
-<p style="font-size:0.6rem;letter-spacing:3px;text-transform:uppercase;color:#3A3028;margin-bottom:0.8rem;">Estado Actual</p>
+<!-- ESTADO ACTUAL -->
+<p style="font-size:0.58rem;letter-spacing:4px;text-transform:uppercase;color:#3A3028;margin-bottom:0.8rem;">Estado Actual</p>
 <div class="grid-4 mb-4">
     <div class="stat-card">
+        <div class="stat-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
         <div class="stat-value">${pedidosAbertos}</div>
         <div class="stat-label">Pedidos Mesa Abertos</div>
     </div>
-    <div class="stat-card" style="<c:if test='${deliveryPendentes > 0}'>border-left:3px solid #C8A951;</c:if>">
+    <div class="stat-card ${deliveryPendentes > 0 ? 'style=\"border-top-color:#C8A951;\"' : ''}">
+        <div class="stat-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
         <div class="stat-value">${deliveryPendentes}</div>
         <div class="stat-label">Delivery Pendentes</div>
     </div>
     <div class="stat-card">
+        <div class="stat-icon">
+            <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
         <div class="stat-value">${mesasLivres}</div>
         <div class="stat-label">Mesas Livres</div>
     </div>
     <div class="stat-card">
+        <div class="stat-icon">
+            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        </div>
         <div class="stat-value">${mesasOcupadas}</div>
         <div class="stat-label">Mesas Ocupadas</div>
     </div>
@@ -106,7 +132,6 @@
     </div>
 </div>
 
-</div>
-</div>
+</div><%-- main-content --%>
 </body>
 </html>

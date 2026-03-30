@@ -4,18 +4,18 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
          http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
- 
+
   <display-name>MuiangasWeb</display-name>
- 
+
   <welcome-file-list>
     <welcome-file>views/public/index.jsp</welcome-file>
   </welcome-file-list>
- 
+
   <error-page>
     <error-code>404</error-code>
     <location>/views/public/index.jsp</location>
   </error-page>
- 
+
   <filter>
     <filter-name>EncodingFilter</filter-name>
     <filter-class>com.muiangas.controller.EncodingFilter</filter-class>
@@ -28,13 +28,13 @@
     <filter-name>EncodingFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
- 
+
   <session-config>
     <session-timeout>60</session-timeout>
   </session-config>
- 
+
   <!-- ══ INDEX ══════════════════════════════════════════════════════════ -->
- 
+
   <servlet>
     <servlet-name>IndexServlet</servlet-name>
     <servlet-class>com.muiangas.controller.IndexServlet</servlet-class>
@@ -43,7 +43,7 @@
     <servlet-name>IndexServlet</servlet-name>
     <url-pattern>/home</url-pattern>
   </servlet-mapping>
- 
+
   <!-- Servlet padrão do Tomcat para ficheiros estáticos (CSS, JS, imagens) -->
   <servlet-mapping>
     <servlet-name>default</servlet-name>
@@ -61,9 +61,9 @@
     <servlet-name>default</servlet-name>
     <url-pattern>/comprovativos/*</url-pattern>
   </servlet-mapping>
- 
+
   <!-- ══ SERVLETS EXISTENTES ══════════════════════════════════════════ -->
- 
+
   <servlet>
     <servlet-name>LoginServlet</servlet-name>
     <servlet-class>com.muiangas.controller.LoginServlet</servlet-class>
@@ -80,7 +80,7 @@
     <servlet-name>LoginServlet</servlet-name>
     <url-pattern>/admin/login</url-pattern>
   </servlet-mapping>
- 
+
   <servlet>
     <servlet-name>MenuServlet</servlet-name>
     <servlet-class>com.muiangas.controller.MenuServlet</servlet-class>
@@ -89,7 +89,7 @@
     <servlet-name>MenuServlet</servlet-name>
     <url-pattern>/menu</url-pattern>
   </servlet-mapping>
- 
+
   <servlet>
     <servlet-name>ReservaServlet</servlet-name>
     <servlet-class>com.muiangas.controller.ReservaServlet</servlet-class>
@@ -102,7 +102,7 @@
     <servlet-name>ReservaServlet</servlet-name>
     <url-pattern>/admin/reservas</url-pattern>
   </servlet-mapping>
- 
+
   <servlet>
     <servlet-name>DashboardServlet</servlet-name>
     <servlet-class>com.muiangas.controller.DashboardServlet</servlet-class>
@@ -111,7 +111,7 @@
     <servlet-name>DashboardServlet</servlet-name>
     <url-pattern>/admin/dashboard</url-pattern>
   </servlet-mapping>
- 
+
   <servlet>
     <servlet-name>ProdutoServlet</servlet-name>
     <servlet-class>com.muiangas.controller.ProdutoServlet</servlet-class>
@@ -120,7 +120,7 @@
     <servlet-name>ProdutoServlet</servlet-name>
     <url-pattern>/admin/produtos</url-pattern>
   </servlet-mapping>
- 
+
   <servlet>
     <servlet-name>CategoriaServlet</servlet-name>
     <servlet-class>com.muiangas.controller.CategoriaServlet</servlet-class>
@@ -129,7 +129,7 @@
     <servlet-name>CategoriaServlet</servlet-name>
     <url-pattern>/admin/categorias</url-pattern>
   </servlet-mapping>
- 
+
   <servlet>
     <servlet-name>MesaServlet</servlet-name>
     <servlet-class>com.muiangas.controller.MesaServlet</servlet-class>
@@ -138,7 +138,7 @@
     <servlet-name>MesaServlet</servlet-name>
     <url-pattern>/admin/mesas</url-pattern>
   </servlet-mapping>
- 
+
   <servlet>
     <servlet-name>PedidoServlet</servlet-name>
     <servlet-class>com.muiangas.controller.PedidoServlet</servlet-class>
@@ -147,7 +147,7 @@
     <servlet-name>PedidoServlet</servlet-name>
     <url-pattern>/admin/pedidos</url-pattern>
   </servlet-mapping>
- 
+
   <servlet>
     <servlet-name>FuncionarioServlet</servlet-name>
     <servlet-class>com.muiangas.controller.FuncionarioServlet</servlet-class>
@@ -156,7 +156,7 @@
     <servlet-name>FuncionarioServlet</servlet-name>
     <url-pattern>/admin/funcionarios</url-pattern>
   </servlet-mapping>
- 
+
   <servlet>
     <servlet-name>RelatorioServlet</servlet-name>
     <servlet-class>com.muiangas.controller.RelatorioServlet</servlet-class>
@@ -165,7 +165,7 @@
     <servlet-name>RelatorioServlet</servlet-name>
     <url-pattern>/admin/relatorios</url-pattern>
   </servlet-mapping>
- 
+
   <servlet>
     <servlet-name>DeliveryServlet</servlet-name>
     <servlet-class>com.muiangas.controller.DeliveryServlet</servlet-class>
@@ -174,7 +174,7 @@
     <servlet-name>DeliveryServlet</servlet-name>
     <url-pattern>/delivery</url-pattern>
   </servlet-mapping>
- 
+
   <servlet>
     <servlet-name>AdminDeliveryServlet</servlet-name>
     <servlet-class>com.muiangas.controller.AdminDeliveryServlet</servlet-class>
@@ -183,9 +183,18 @@
     <servlet-name>AdminDeliveryServlet</servlet-name>
     <url-pattern>/admin/delivery</url-pattern>
   </servlet-mapping>
- 
+
+  <servlet>
+    <servlet-name>AdminClienteServlet</servlet-name>
+    <servlet-class>com.muiangas.controller.AdminClienteServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AdminClienteServlet</servlet-name>
+    <url-pattern>/admin/cliente</url-pattern>
+  </servlet-mapping>
+
   <!-- ══ NOVOS SERVLETS — SISTEMA DE CLIENTES ════════════════════════ -->
- 
+
   <servlet>
     <servlet-name>ClienteAuthServlet</servlet-name>
     <servlet-class>com.muiangas.controller.ClienteAuthServlet</servlet-class>
@@ -202,7 +211,7 @@
     <servlet-name>ClienteAuthServlet</servlet-name>
     <url-pattern>/cliente/logout</url-pattern>
   </servlet-mapping>
- 
+
   <servlet>
     <servlet-name>ClienteAreaServlet</servlet-name>
     <servlet-class>com.muiangas.controller.ClienteAreaServlet</servlet-class>
@@ -211,5 +220,5 @@
     <servlet-name>ClienteAreaServlet</servlet-name>
     <url-pattern>/cliente/area</url-pattern>
   </servlet-mapping>
- 
+
 </web-app>

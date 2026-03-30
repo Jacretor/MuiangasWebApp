@@ -29,34 +29,31 @@ public class MesaServlet extends HttpServlet {
                 req.setAttribute("mesa", dao.buscarPorId(Integer.parseInt(req.getParameter("id"))));
                 req.getRequestDispatcher("/views/admin/mesa-form.jsp").forward(req, resp);
 
-            } else if ("status".equals(acao)) {
-                dao.alterarStatus(Integer.parseInt(req.getParameter("id")), req.getParameter("s"));
-                resp.sendRedirect(req.getContextPath() + "/admin/mesas");
-
             } else if ("eliminar".equals(acao)) {
-                // ── NOVA ACÇÃO: eliminar mesa ──
                 int id = Integer.parseInt(req.getParameter("id"));
-                try {
-                    dao.eliminar(id);
-                    resp.sendRedirect(req.getContextPath() + "/admin/mesas?sucesso=eliminada");
-                } catch (Exception e) {
-                    // Pode falhar se mesa tiver pedidos associados
-                    req.setAttribute("erro", "Não é possível eliminar esta mesa — tem pedidos associados.");
+                boolean eliminado = dao.eliminar(id);
+                if (eliminado) {
+                    resp.sendRedirect(req.getContextPath() + "/admin/mesas?msg=eliminado");
+                } else {
+                    req.setAttribute("erro", "Não é possível eliminar esta mesa porque tem pedidos associados no histórico.");
                     req.setAttribute("mesas", dao.listarTodas());
                     req.getRequestDispatcher("/views/admin/mesas.jsp").forward(req, resp);
                 }
 
+            } else if ("status".equals(acao)) {
+                dao.alterarStatus(
+                    Integer.parseInt(req.getParameter("id")),
+                    req.getParameter("novoStatus")
+                );
+                resp.sendRedirect(req.getContextPath() + "/admin/mesas");
+
             } else {
-                String sucesso = req.getParameter("sucesso");
-                if ("eliminada".equals(sucesso)) {
-                    req.setAttribute("sucesso", "Mesa eliminada com sucesso.");
-                }
                 req.setAttribute("mesas", dao.listarTodas());
                 req.getRequestDispatcher("/views/admin/mesas.jsp").forward(req, resp);
             }
-
         } catch (Exception e) {
             req.setAttribute("erro", "Erro: " + e.getMessage());
+            try { req.setAttribute("mesas", dao.listarTodas()); } catch (Exception ignored) {}
             req.getRequestDispatcher("/views/admin/mesas.jsp").forward(req, resp);
         }
     }
@@ -77,9 +74,8 @@ public class MesaServlet extends HttpServlet {
             m.setStatus(req.getParameter("status") != null ? req.getParameter("status") : "livre");
 
             if (m.getId() > 0) dao.actualizar(m);
-            else               dao.inserir(m);
+            else dao.inserir(m);
             resp.sendRedirect(req.getContextPath() + "/admin/mesas");
-
         } catch (Exception e) {
             req.setAttribute("erro", "Erro: " + e.getMessage());
             req.getRequestDispatcher("/views/admin/mesa-form.jsp").forward(req, resp);
@@ -89,8 +85,7 @@ public class MesaServlet extends HttpServlet {
     private boolean autenticado(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         HttpSession s = req.getSession(false);
         if (s == null || s.getAttribute("funcionario") == null) {
-            resp.sendRedirect(req.getContextPath() + "/login");
-            return false;
+            resp.sendRedirect(req.getContextPath() + "/login"); return false;
         }
         return true;
     }

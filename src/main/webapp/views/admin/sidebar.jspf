@@ -365,6 +365,7 @@ body {
     else if (uri.contains("/categorias"))activePage = "categorias";
     else if (uri.contains("/pedidos"))   activePage = "pedidos";
     else if (uri.contains("/funcionarios")) activePage = "funcionarios";
+    else if (uri.contains("/cliente"))  activePage = "cliente";  // NOVO
     else if (uri.contains("/relatorios"))activePage = "relatorios";
 %>
 
@@ -449,6 +450,16 @@ body {
                class="<%= "categorias".equals(activePage) ? "active" : "" %>" onclick="closeSidebarMobile()">
                  Categorias
             </a>
+        </div>
+        <div class="nav-sep"></div>
+        
+        <div class="nav-group">
+           <div class="nav-group-label">Gestao de Clientes</div>
+            <a href="${pageContext.request.contextPath}/admin/cliente"
+               class="<%= "cliente".equals(activePage) ? "active" : "" %>" onclick="closeSidebarMobile()">
+                 Clientes
+            </a>
+
         </div>
 
         <div class="nav-sep"></div>

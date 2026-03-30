@@ -75,8 +75,8 @@
         }
         .pag-btn .pag-icone { font-size:1.3rem; }
         .pag-btn:hover { border-color:#6B4C2A; color:#C0B4A8; }
-        .pag-btn.sel-mpesa  { border-color:#C8A951; background:rgba(200,169,81,0.1); color:#C8A951; }
-        .pag-btn.sel-emola  { border-color:#E05050; background:rgba(224,80,80,0.1);  color:#E07070; }
+		.pag-btn.sel-mpesa { border-color: #FF0000;  background: rgba(255, 0, 0, 0.1); color: #FF0000; }
+		.pag-btn.sel-emola { border-color: #FF6600; background: rgba(255, 102, 0, 0.1); color: #FF6600; }
         .pag-btn.sel-dinheiro { border-color:#78C878; background:rgba(120,200,120,0.1); color:#78C878; }
 
         .instrucoes-pag {
@@ -84,8 +84,8 @@
             margin-bottom:1rem; display:none; border:1px solid #2A2218;
         }
         .instrucoes-pag.visivel { display:block; }
-        .instr-titulo { font-size:0.6rem; letter-spacing:2px; text-transform:uppercase; color:#4A4038; margin-bottom:0.6rem; }
-        .instr-numero { font-size:1.1rem; font-weight:900; color:#C8A951; letter-spacing:2px; margin:0.3rem 0; }
+        .instr-titulo { font-size:0.6rem; letter-spacing:2px; text-transform:uppercase; color:#E07070; margin-bottom:0.6rem; }
+        .instr-numero { font-size:1.1rem; font-weight:900; color: #E07070; letter-spacing:2px; margin:0.3rem 0; }
         .instr-nome   { font-size:0.78rem; color:#C0B4A8; margin-bottom:0.5rem; }
         .instr-passo  { font-size:0.72rem; color:#5A4E44; line-height:1.8; }
         .instr-passo strong { color:#C0B4A8; }
@@ -141,7 +141,7 @@
 
 <div class="delivery-hero">
     <h1> DELIVERY</h1>
-    <p>Entrega ao domicílio · Chimoio · Das 9h às 17h</p>
+    <p>Entrega ao domicílio · Chimoio · Das 8h às 17h</p>
 </div>
 
 <c:if test="${not empty erroServlet}">
@@ -315,7 +315,7 @@
                 <div class="instr-nome">${pagamentoNome}</div>
                 <div class="instr-passo">
                     1. Abre o M-Pesa no teu telefone<br>
-                    2. Selecciona <strong>Enviar Dinheiro</strong><br>
+                    2. Selecciona <strong>Transferir</strong><br>
                     3. Insere o número acima<br>
                     4. Insere o valor total do pedido<br>
                     5. Faz uma captura de ecrã e anexa abaixo
@@ -324,8 +324,8 @@
 
             <%-- Instruções eMola --%>
             <div class="instrucoes-pag" id="instr-emola">
-                <div class="instr-titulo" style="color:#E07070;"> Instruções eMola</div>
-                <div class="instr-numero" style="color:#E07070;">${emolaNumero}</div>
+                <div class="instr-titulo" style="color:#C8A951;"> Instruções eMola</div>
+                <div class="instr-numero" style="color:#C8A951;">${emolaNumero}</div>
                 <div class="instr-nome">${pagamentoNome}</div>
                 <div class="instr-passo">
                     1. Abre o eMola no teu telefone<br>

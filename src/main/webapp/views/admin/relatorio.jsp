@@ -13,7 +13,7 @@
         .sec-rel::before { content:''; width:24px; height:1px; background:#3A3028; }
         .badge-metodo { display:inline-block; padding:0.2rem 0.6rem; border-radius:20px; font-size:0.62rem; font-weight:700; letter-spacing:1px; text-transform:uppercase; }
         .bm-mpesa    { background:rgba(180,40,40,0.15);  color:#DC5050; }
-        .bm-emola    { background:rgba(220,120,30,0.15); color:#E08030; }
+		.bm-emola    { background:rgba(220,120,30,0.15); color:#E08030; }
         .bm-dinheiro { background:rgba(120,200,120,0.15);color:#78C878; }
         .bm-pago     { background:rgba(80,160,80,0.15);  color:#50A050; }
         .bm-cancelado{ background:rgba(220,80,60,0.15);  color:#DC503C; }
@@ -240,11 +240,11 @@ new Chart(ctx2, {
             label: 'Pedidos',
             data: [cntMpesa, cntEmola, cntDinheiro],
             backgroundColor: [
-                'rgba(200,169,81,0.6)',
-                'rgba(107,76,42,0.6)',
-                'rgba(90,138,90,0.6)'
+                'rgba(180,40,40,0.7)',
+                'rgba(220,120,30,0.7)',
+                'rgba(90,138,90,0.7)'
             ],
-            borderColor: ['#C8A951','#6B4C2A','#5A8A5A'],
+            borderColor: ['#DC5050','#E08030','#5A8A5A'],
             borderWidth: 1.5,
             borderRadius: 6
         }]

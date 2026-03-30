@@ -32,6 +32,17 @@ public class ProdutoDAO {
             ps.executeUpdate();
         } finally { DBUtil.close(conn); }
     }
+    
+    /** Activa o produto — volta a aparecer no menu */
+    public void activar(int id) throws SQLException {
+        Connection conn = DBUtil.getConnection();
+        try (PreparedStatement ps = conn.prepareStatement(
+                "UPDATE produtos SET disponivel=1 WHERE id=?")) {
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        } finally { DBUtil.close(conn); }
+    }
+
 
 
     public List<Produto> listarTodos() throws SQLException {
