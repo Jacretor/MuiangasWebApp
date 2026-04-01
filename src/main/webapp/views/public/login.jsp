@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login — Muianga's</title>
+    <title>Login â Muianga's</title>
     <link rel="stylesheet" href="/MuiangasWeb/css/style.css">
 </head>
 <body>
@@ -25,25 +25,25 @@
             <div class="form-group">
                 <label class="form-label">Senha</label>
                 <input type="password" name="senha" class="form-control"
-                       placeholder="••••••••" required>
+                       placeholder="â¢â¢â¢â¢â¢â¢â¢â¢" required>
             </div>
             <button type="submit" class="btn btn-gold w-100 mt-2">Entrar</button>
         </form>
 
         <p class="text-center text-muted mt-3" style="font-size:0.8rem;">
-            <a href="/MuiangasWeb/">← Voltar ao site</a>
+            <a href="/MuiangasWeb/"> Voltar ao site</a>
         </p>
     </div>
 </div>
 
 <script>
-    // Mostrar erro se vier via parâmetro URL (?erro=...)
+    // Mostrar erro se vier via parÃ¢metro URL (?erro=...)
     var params = new URLSearchParams(window.location.search);
     var erro   = params.get('erro');
     if (erro) {
         var el = document.getElementById('msg-erro');
         var msgs = {
-            'credenciais': 'E-mail ou senha inválidos.',
+            'credenciais': 'E-mail ou senha invÃ¡lidos.',
             'campos':      'Preencha o e-mail e a senha.',
             'interno':     'Erro interno. Tente novamente.'
         };
