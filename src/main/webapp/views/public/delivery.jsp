@@ -141,7 +141,7 @@
 
 <div class="delivery-hero">
     <h1> DELIVERY</h1>
-    <p>Entrega ao domicílio · Chimoio · Das 8h às 17h</p>
+    <p>Entrega ao domicílio · Chimoio · Das 8h às 20h</p>
 </div>
 
 <c:if test="${not empty erroServlet}">
@@ -202,6 +202,33 @@
 
 <%-- ══ FORMULÁRIO ══ --%>
 <c:if test="${aberto == true && empty param.sucesso}">
+
+<%-- AUTH GUARD — visitante não logado --%>
+<c:if test="${empty sessionScope.cliente}">
+<div style="max-width:500px;margin:4rem auto;text-align:center;background:#161210;border:1px solid rgba(200,169,81,0.15);border-radius:14px;padding:3rem 2.5rem;">
+    <div style="width:60px;height:60px;border-radius:50%;background:rgba(200,169,81,0.08);border:1px solid rgba(200,169,81,0.2);display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#C8A951" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+    </div>
+    <h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;color:#F0EAE0;margin-bottom:0.8rem;">Conta necessária</h2>
+    <p style="font-size:0.82rem;color:#4A4038;line-height:1.8;margin-bottom:2rem;">Para fazer um pedido de delivery precisas de uma conta. É gratuito e permite acompanhar os teus pedidos.</p>
+    <a href="${pageContext.request.contextPath}/cliente/registo?redirect=/delivery"
+       style="display:block;width:100%;padding:0.9rem;border-radius:50px;border:1.5px solid #C8A951;background:transparent;color:#C8A951;font-family:'Montserrat',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;text-decoration:none;text-align:center;transition:all 0.25s;margin-bottom:0.8rem;">
+        Criar conta gratuita
+    </a>
+    <div style="display:flex;align-items:center;gap:1rem;margin:0.6rem 0;">
+        <div style="flex:1;height:1px;background:#1E1814;"></div>
+        <span style="font-size:0.6rem;color:#2A2218;letter-spacing:2px;text-transform:uppercase;">ou</span>
+        <div style="flex:1;height:1px;background:#1E1814;"></div>
+    </div>
+    <a href="${pageContext.request.contextPath}/cliente/login?redirect=/delivery"
+       style="display:block;width:100%;padding:0.85rem;border-radius:50px;border:1.5px solid #1E1814;background:transparent;color:#5A4E44;font-family:'Montserrat',sans-serif;font-size:0.7rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;text-decoration:none;text-align:center;transition:all 0.2s;">
+        Já tenho conta — Entrar
+    </a>
+</div>
+</c:if>
+
+<%-- Conteúdo só para clientes logados --%>
+<c:if test="${not empty sessionScope.cliente}">
 
 <c:if test="${not empty erro}">
     <div class="erro-box">⚠️ <c:out value="${erro}"/></div>
@@ -377,7 +404,9 @@
     <input type="file"   name="comprovativo"    id="fComp" accept="image/*">
 </form>
 
-</c:if>
+</c:if><%-- fecha sessionScope.cliente --%>
+
+</c:if><%-- fecha aberto --%>
 
 <footer style="margin-top:4rem;">
     <strong>MUIANGA'S</strong> Bar &amp; Restaurante · Delivery das 9h às 17h · &copy; 2026

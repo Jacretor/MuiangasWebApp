@@ -29,7 +29,7 @@ public class DeliveryServlet extends HttpServlet {
     private final CategoriaDAO categoriaDAO = new CategoriaDAO();
 
     private static final int HORA_ABERTURA     = 8;
-    private static final int HORA_ENCERRAMENTO = 17;
+    private static final int HORA_ENCERRAMENTO = 19;
     static final String MPESA_NUMERO   = "84 168 4193";
     static final String EMOLA_NUMERO   = "87 316 3905";
     static final String PAGAMENTO_NOME = "Muianga's Restaurante";

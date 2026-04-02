@@ -2,19 +2,22 @@ package com.muiangas.controller;
 
 import com.muiangas.dao.ClienteDAO;
 import com.muiangas.dao.DeliveryDAO;
+import com.muiangas.dao.ReservaDAO;
 import com.muiangas.dao.ProdutoDAO;
 import com.muiangas.model.*;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.util.List;
 
-
+@WebServlet(name = "ClienteAreaServlet", urlPatterns = "/cliente/area")
 public class ClienteAreaServlet extends HttpServlet {
 
     private final ClienteDAO  clienteDAO  = new ClienteDAO();
     private final DeliveryDAO deliveryDAO = new DeliveryDAO();
+    private final ReservaDAO  reservaDAO  = new ReservaDAO();
     private final ProdutoDAO  produtoDAO  = new ProdutoDAO();
 
     @Override
@@ -36,6 +39,10 @@ public class ClienteAreaServlet extends HttpServlet {
                     req.setAttribute("pedidos", deliveryDAO.listarPorCliente(cliente.getId()));
                     break;
 
+                case "reservas":
+                    req.setAttribute("reservas", reservaDAO.listarPorCliente(cliente.getId()));
+                    break;
+
                 case "enderecos":
                     req.setAttribute("enderecos", clienteDAO.listarEnderecos(cliente.getId()));
                     req.setAttribute("zonas",     deliveryDAO.listarZonasAtivas());
@@ -54,6 +61,7 @@ public class ClienteAreaServlet extends HttpServlet {
 
                 default: // inicio
                     req.setAttribute("pedidos",   deliveryDAO.listarPorCliente(cliente.getId()));
+                    req.setAttribute("reservas",  reservaDAO.listarPorCliente(cliente.getId()));
                     req.setAttribute("favCount",  clienteDAO.listarFavoritosIds(cliente.getId()).size());
                     req.setAttribute("endCount",  clienteDAO.listarEnderecos(cliente.getId()).size());
                     break;

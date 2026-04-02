@@ -365,7 +365,8 @@ body {
     else if (uri.contains("/categorias"))activePage = "categorias";
     else if (uri.contains("/pedidos"))   activePage = "pedidos";
     else if (uri.contains("/funcionarios")) activePage = "funcionarios";
-    else if (uri.contains("/cliente"))  activePage = "cliente";  // NOVO
+    else if (uri.contains("/clientes")) activePage = "clientes";
+    else if (uri.contains("/delivery"))  activePage = "delivery";
     else if (uri.contains("/relatorios"))activePage = "relatorios";
 %>
 
@@ -455,8 +456,8 @@ body {
         
         <div class="nav-group">
            <div class="nav-group-label">Gestao de Clientes</div>
-            <a href="${pageContext.request.contextPath}/admin/cliente"
-               class="<%= "cliente".equals(activePage) ? "active" : "" %>" onclick="closeSidebarMobile()">
+            <a href="${pageContext.request.contextPath}/admin/clientes"
+               class="<%= "clientes".equals(activePage) ? "active" : "" %>" onclick="closeSidebarMobile()">
                  Clientes
             </a>
 

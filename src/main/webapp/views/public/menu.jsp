@@ -126,7 +126,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 3.5rem;
         }
 
         .prod-body { padding: 1.2rem; }
@@ -231,14 +230,7 @@
                 </c:when>
                 <c:otherwise>
                     <div class="prod-emoji">
-                        <c:choose>
-                            <c:when test="${p.categoriaNome == 'Bebidas'}">🍺</c:when>
-                            <c:when test="${p.categoriaNome == 'Refeições'}">🍽️</c:when>
-                            <c:when test="${p.categoriaNome == 'Petiscos'}">🥨</c:when>
-                            <c:when test="${p.categoriaNome == 'Cocktails'}">🍹</c:when>
-                            <c:when test="${p.categoriaNome == 'Sobremesas'}">🍰</c:when>
-                            <c:otherwise>🍴</c:otherwise>
-                        </c:choose>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#3A3028" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="40" height="40"><path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
                     </div>
                 </c:otherwise>
             </c:choose>
@@ -249,8 +241,25 @@
                 <c:if test="${not empty p.descricao}">
                     <div class="prod-desc"><c:out value="${p.descricao}"/></div>
                 </c:if>
-                <div class="prod-preco">
-                    <fmt:formatNumber value="${p.preco}" pattern="#,##0.00"/> MZN
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-top:0.8rem;flex-wrap:wrap;gap:0.5rem;">
+                    <div class="prod-preco">
+                        <fmt:formatNumber value="${p.preco}" pattern="#,##0.00"/> MZN
+                    </div>
+                    <c:choose>
+                        <c:when test="${not empty sessionScope.cliente}">
+                            <a href="${pageContext.request.contextPath}/delivery"
+                               style="padding:0.4rem 1rem;border-radius:50px;border:1.5px solid #C8A951;color:#C8A951;font-size:0.62rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;text-decoration:none;transition:all 0.2s;white-space:nowrap;">
+                               Pedir
+                            </a>
+                        </c:when>
+                        <c:otherwise>
+                            <a href="${pageContext.request.contextPath}/cliente/login?redirect=/delivery"
+                               style="padding:0.4rem 1rem;border-radius:50px;border:1.5px solid #3A3028;color:#5A4E44;font-size:0.62rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;text-decoration:none;transition:all 0.2s;white-space:nowrap;"
+                               title="Faz login para pedir">
+                               Pedir
+                            </a>
+                        </c:otherwise>
+                    </c:choose>
                 </div>
             </div>
         </div>

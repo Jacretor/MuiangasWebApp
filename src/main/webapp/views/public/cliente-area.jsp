@@ -225,6 +225,10 @@
                 <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                 Pedidos
             </a>
+            <a href="?aba=reservas" class="ca-tab ${aba=='reservas' ?'active':''}">
+                <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                Reservas
+            </a>
             <a href="?aba=enderecos" class="ca-tab ${aba=='enderecos' ?'active':''}">
                 <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
                 Endereços
@@ -291,6 +295,46 @@
     </c:forEach>
     <c:if test="${empty pedidos}">
         <div class="vazio">Ainda não fizeste nenhum pedido.<br><a href="${pageContext.request.contextPath}/delivery">Fazer primeiro pedido →</a></div>
+    </c:if>
+</c:if>
+
+<%-- ══ RESERVAS ══ --%>
+<c:if test="${aba=='reservas'}">
+    <div class="sec-titulo">As minhas reservas</div>
+    <c:forEach var="r" items="${reservas}">
+    <div class="pedido-card">
+        <div class="pedido-header">
+            <div>
+                <div class="pedido-id">Reserva #${r.id}</div>
+                <div class="pedido-data">
+                    <fmt:formatDate value="${r.dataReserva}" pattern="dd/MM/yyyy"/> às
+                    <fmt:formatDate value="${r.horaReserva}" pattern="HH:mm"/>
+                    · ${r.numPessoas} pessoa${r.numPessoas > 1 ? 's' : ''}
+                </div>
+            </div>
+            <span class="badge-pag ${r.status == 'confirmada' ? 'bp-aprovado' : r.status == 'cancelada' || r.status == 'nao_compareceu' ? 'bp-rejeitado' : 'bp-pendente'}">
+                <c:choose>
+                    <c:when test="${r.status == 'confirmada'}">Confirmada</c:when>
+                    <c:when test="${r.status == 'cancelada'}">Cancelada</c:when>
+                    <c:when test="${r.status == 'nao_compareceu'}">Não compareceu</c:when>
+                    <c:otherwise>Pendente</c:otherwise>
+                </c:choose>
+            </span>
+        </div>
+        <c:if test="${not empty r.observacoes}">
+            <div style="font-size:0.75rem;color:#4A4038;font-style:italic;margin-top:0.4rem;">"<c:out value="${r.observacoes}"/>"</div>
+        </c:if>
+        <c:if test="${r.status == 'pendente'}">
+            <div style="margin-top:0.8rem;">
+                <a href="${pageContext.request.contextPath}/reserva" style="font-size:0.68rem;color:#C8A951;text-decoration:none;border-bottom:1px solid rgba(200,169,81,0.3);padding-bottom:1px;">
+                    Para cancelar contacta-nos →
+                </a>
+            </div>
+        </c:if>
+    </div>
+    </c:forEach>
+    <c:if test="${empty reservas}">
+        <div class="vazio">Ainda não fizeste nenhuma reserva.<br><a href="${pageContext.request.contextPath}/reserva">Fazer reserva →</a></div>
     </c:if>
 </c:if>
 
